@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Добавить книгу</title>
+  </head>
+  <body>
+    <h1>Добавить книгу</h1>
+    <!-- Указываем правильный action для отправки данных на сервер -->
+    <form action="/add-book" method="post">
+      <label for="title">Название книги:</label>
+      <input type="text" name="title" id="title" placeholder="Название" required />
+      
+      <label for="author">Автор книги:</label>
+      <input type="text" name="author" id="author" placeholder="Автор" required />
+
+      <label for="status_b">Статус книги:</label>
+      <input type="text" name="status_b" id="status_b" placeholder="Статус" required />
+
+      <button type="submit">Отправить</button>
+    </form>
+  </body>
+</html>

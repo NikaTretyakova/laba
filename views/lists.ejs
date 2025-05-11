@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>App</title>
+    <style>
+        td, table {
+            border: 1px solid black;
+            margin: 0;
+        }
+    </style>
+  </head>
+  <body>
+    <h1>Читатели библиотеки</h1>
+    <table class="readers">
+        <tr>
+            <td>Логин</td>
+            <td>Фамилия</td>
+            <td>Имя</td>
+            <td>Отчество</td>
+            <td>Дата регистрации</td>
+            <td>Дата последнего входа</td>
+            <td>Статус</td>
+            <th>Действия</th>
+        </tr>
+        <% for(let i of readers){ %>
+            <tr>
+                <td><%= i.login %></td>
+                <td><%= i.last_name %></td>
+                <td><%= i.first_name %></td>
+                <td><%= i.patronymic %></td>
+                <td><%= i.registration_date ? new Date(i.registration_date).toLocaleString('ru-RU') : "" %></td>
+                <td><%= i.last_visit ? new Date(i.last_visit).toLocaleString('ru-RU') : "-" %></td>
+                <td><%= i.status %></td>
+                <% if(i.editable || i.idr === user.idr) { %>
+                    <td><a href="javascript:editReader(<%= i.idr %>)">Редактировать</a><br/>
+                        <a href="javascript:deleteReader(<%= i.idr %>)">Удалить</a></td>
+                <% } else { %>
+                    <td>-</td>
+                <% } %>
+            </tr>
+        <% } %>
+    </table>
+    <br/>
+    <h1 style="margin-bottom: 0;">Взятые книги</h1>
+    <h2 style="margin-top: 0;"><a href="javascript:window.location=/addbook/+window.location.search;">Добавить книгу</a></h2>
+    <table>
+        <tr>
+            <td>Название</td>
+            <td>Автор</td>
+            <td>Читатель</td>
+            <td>Дата выдачи</td>
+            <td>Статус</td>
+            <th>Действия</th>
+        </tr>
+        <% for(let i of books){ %>
+            <tr>
+                <td><%= i.title %></td>
+                <td><%= i.author %></td>
+                <td><%= i.reader_name || "-" %></td>
+                <td><%= i.added_date ? new Date(i.added_date).toLocaleString('ru-RU') : "-" %></td>
+                <td><%= i.status %></td>
+                <% if(i.editable) { %>
+                    <td><a href="javascript:deleteBook(<%= i.idb %>)">Удалить</a></td>
+                <% } else { %>
+                    <td>-</td>
+                <% } %>
+            </tr>
+        <% } %>
+    </table>
+    <script>
+        function deleteReader(id){
+            fetch("/deletereader/" + window.location.search, {
+                method: "delete",
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify({id: id})
+            }).then(
+                (res) => {
+                    window.location.reload(true);
+                }
+            ).catch((err) => {console.error(err)});
+        }
+
+        function deleteBook(id){
+            fetch("/deletebook/" + window.location.search, {
+                method: "delete",
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify({id: id})
+            }).then(
+                (res) => {
+                    window.location.reload(true);
+                }
+            ).catch((err) => {console.error(err)});
+        }
+
+        function editReader(id){
+            window.location.href = `/editreader/${id}${window.location.search}`;
+        }
+    </script>
+  </body>
+</html>
